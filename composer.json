@@ -18,7 +18,7 @@
   },
   "autoload": {
     "psr-0": {
-      "LibiChai\\RedLock": "src/"
+      "LibiChai\\RedLock\\": "src/"
     }
   },
   "minimum-stability": "stable"
