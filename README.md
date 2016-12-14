@@ -7,3 +7,24 @@ larave-redislock 是基于php-redlock基础上为larave开发的分布式锁
 
 ###使用说明
 
+1. 使用 `comporse require libichai/laravel-redlock` 载入项目依赖
+2. 添加服务器提供器,将 `LibiChai\RedLock\RedLockServiceProvider::class,` 添加到config/app.php的 `providers` 中
+3. 可选添加门面 `'RedLock'=>LibiChai\RedLock\RedLockFactory::class,` 到config/app.php的 `aliases` 中
+4. 使用实例
+ ```php
+ 
+ use RedLock;
+
+//假设product为抢购商品 
+ $product_id = 1;
+ 
+//使用商品id作为锁键
+ $locktoken = RedLock::lock($product_id);
+  
+//执行库存判断 下单等操作
+ $order->submit($product_id,$user); 
+
+//解除锁定
+ RedLock::unlock($locktoken); 
+ 
+ ```
