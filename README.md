@@ -3,7 +3,8 @@
 
 ###关于
 
-larave-redislock 是基于php-redlock基础上为larave开发的分布式锁
+larave-redislock 是在[php-redlock](https://github.com/ronnylt/redlock-php)基础上将redis扩展改为predis插件后为larave进行封装的分布式锁。
+欢迎大家提交反馈
 
 ###使用说明
 
