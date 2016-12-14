@@ -12,6 +12,8 @@
   ],
   "require": {
     "php": ">=5.4.0",
+    "illuminate/support": "^5.0,<5.5",
+    "illuminate/console": "^5.0,<5.5",
     "predis/predis": "^1.1"
   },
   "autoload": {
