@@ -1,0 +1,23 @@
+{
+  "name": "LibiChai/laravel-redlock",
+  "description": "Redis distributed locks for laravel",
+  "license": "MIT",
+  "version": "1.0.0",
+  "keywords": ["redlock", "laravel redis lock", "redis lock"],
+  "authors": [
+    {
+      "name": "LibiChai",
+      "email": "chaiguoxing@qq.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.0",
+    "predis/predis": "^1.1"
+  },
+  "autoload": {
+    "psr-0": {
+      "LibiChai\\RedLock": "src/"
+    }
+  },
+  "minimum-stability": "stable"
+}
