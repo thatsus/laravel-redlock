@@ -1,5 +1,5 @@
 {
-  "name": "LibiChai/laravel-redlock",
+  "name": "libichai/laravel-redlock",
   "description": "Redis distributed locks for laravel",
   "license": "MIT",
   "version": "1.0.0",
