@@ -83,7 +83,7 @@ class RedLock
     }
     private function lockInstance($instance, $resource, $token, $ttl)
     {
-        return $instance->setex($resource, $ttl, $token);
+        return $instance->set($resource, $token,"PX",$ttl,"NX");
         //return $instance->set($resource, $token, ['NX', 'PX' => $ttl]);
     }
     private function unlockInstance($instance, $resource, $token)
