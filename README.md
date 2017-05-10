@@ -1,12 +1,12 @@
-＃Laravel RedLock
+# Laravel RedLock
 一个基于laravel框架的redis分布式锁。一般用于高并发抢单，支付等原子性操作的锁操作。
 
-###关于
+### 关于
 
 larave-redislock 是在[php-redlock](https://github.com/ronnylt/redlock-php)基础上将redis扩展改为predis插件后为larave进行封装的分布式锁。
 欢迎大家提交反馈
 
-###使用说明
+### 使用说明
 
 1. 使用 `comporse require libichai/laravel-redlock` 载入项目依赖
 2. 添加服务器提供器,将 `LibiChai\RedLock\RedLockServiceProvider::class,` 添加到config/app.php的 `providers` 中
