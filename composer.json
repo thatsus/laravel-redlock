@@ -2,7 +2,7 @@
   "name": "libichai/laravel-redlock",
   "description": "Redis distributed locks for laravel",
   "license": "MIT",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "keywords": ["redlock", "laravel redis lock", "redis lock"],
   "authors": [
     {
