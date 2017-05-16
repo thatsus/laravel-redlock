@@ -16,11 +16,6 @@ class RedLockServiceProvider extends ServiceProvider{
      */
     public function boot()
     {
-        //publish a config file
-        $this->publishes([
-            __DIR__.'/config/config.php' => config_path('redlock.php'),
-        ], 'config');
-
 
     }
 
@@ -29,23 +24,13 @@ class RedLockServiceProvider extends ServiceProvider{
      */
     public function register()
     {
-        // merge configs
-        $this->mergeConfigFrom(__DIR__.'/config/config.php', 'redlock');
-
         // store to container
         $this->app->singleton('redlock', function ($app) {
-            return new RedLock($this->config('serivers'),$this->config('retry_delay'),$this->config('retry_count'));
+            return new RedLock(
+                [config('database.redis.default')], 
+                config('database.redis.redis_lock.retry_delay'), 
+                config('database.redis.redis_lock.retry_count')
+            );
         });
-    }
-
-    /**
-     * Helper to get the config values.
-     *
-     * @param  string $key
-     * @return string
-     */
-    protected function config($key, $default = null)
-    {
-        return config("redlock.$key", $default);
     }
 }
