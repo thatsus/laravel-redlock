@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace LibiChai\RedLock;
+namespace LibiChai\RedLock\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
