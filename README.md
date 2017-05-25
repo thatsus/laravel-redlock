@@ -2,7 +2,7 @@
 
 Provides a locking mechanism using Redis. Implements the locking standard proposed by Redis.
 
-# Acknowledgement
+### Acknowledgements
 
 This library was originally built by LibiChai, then reworked by the team at That's Us, Inc.
 
