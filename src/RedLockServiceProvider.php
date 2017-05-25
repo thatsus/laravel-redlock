@@ -1,11 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: libi
- * Date: 16/12/14
- * Time: 下午12:15
- */
-namespace LibiChai\RedLock;
+
+namespace ThatsUs\RedLock;
 
 use Illuminate\Support\ServiceProvider;
 use LibiChai\RedLock\RedLock;
