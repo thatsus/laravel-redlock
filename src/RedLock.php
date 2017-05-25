@@ -1,12 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: libi
- * Date: 16/12/14
- * Time: 下午12:20
- * //
- */
-namespace LibiChai\RedLock;
+
+namespace ThatsUs\RedLock;
 
 use Predis\Client as Redis;
 
