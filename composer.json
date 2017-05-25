@@ -1,5 +1,5 @@
 {
-  "name": "libichai/laravel-redlock",
+  "name": "thatsus/laravel-redlock",
   "description": "Redis distributed locks for laravel",
   "license": "MIT",
   "version": "1.0.1",
@@ -8,6 +8,10 @@
     {
       "name": "LibiChai",
       "email": "chaiguoxing@qq.com"
+    },
+    {
+      "name": "Daniel Kuck-Alvarez",
+      "email": "dkuck@thatsus.com"
     }
   ],
   "require": {
@@ -18,7 +22,7 @@
   },
   "autoload": {
     "psr-4": {
-      "LibiChai\\RedLock\\": "src/"
+      "ThatsUs\\RedLock\\": "src/"
     }
   },
   "minimum-stability": "stable"
