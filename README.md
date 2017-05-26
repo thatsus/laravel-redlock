@@ -109,7 +109,7 @@ The `ThatsUs\RedLock\Traits\QueueWithoutOverlap` trait provides this functionali
 1. `use ThatsUs\RedLock\Traits\QueueWithoutOverlap` as a trait
 2. Change the `handle()` method to `handleSync()`
 
-```
+```php
 use ThatsUs\RedLock\Traits\QueueWithoutOverlap;
 
 class OrderProduct
@@ -136,7 +136,7 @@ This is typically unnecessary because the lock key can be generated automaticall
 
 This trait also provides a refresh method called `refreshLock()`. If `refreshLock()` is unable to refresh the lock, an exception is thrown and the job fails.
 
-```
+```php
 use ThatsUs\RedLock\Traits\QueueWithoutOverlap;
 
 class OrderProducts
