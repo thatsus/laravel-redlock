@@ -136,7 +136,7 @@ This is typically unnecessary because the lock key can be generated automaticall
 
 This trait also provides a refresh method called `refreshLock()`. If `refreshLock()` is unable to refresh the lock, an exception is thrown and the job fails.
 
-Finally, you can change the lock time to live from the default 300 seconds to another
+Finally, you can change the lock time-to-live from the default 300 seconds to another
 value using the `$lock_time` property.
 
 ```php
