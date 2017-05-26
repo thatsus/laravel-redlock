@@ -6,7 +6,7 @@ Provides a generic locking mechanism using Redis. Implements the locking standar
 
 ### Acknowledgements
 
-This library was originally built by LibiChai, then reworked by the team at That's Us, Inc.
+This library was originally built by LibiChai based on the Redlock algorithm developed by antirez. The library was reworked by the team at That's Us, Inc.
 
 ### Installation
 
