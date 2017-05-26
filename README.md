@@ -17,7 +17,7 @@ This library was originally built by LibiChai based on the Redlock algorithm dev
 
 ### It's Simple!
 
-Set a lock on any scalar. If the `lock()` method returns false, you did not aquire the lock.
+Set a lock on any scalar. If the `lock()` method returns false, you did not acquire the lock.
 
 Store results of the `lock()` method. Use this value to release the lock with `unlock()`.
 
@@ -25,7 +25,7 @@ Store results of the `lock()` method. Use this value to release the lock with `u
 
 This example sets a lock on the key "1" with a 3 second expiration time.
 
-If it aquired the lock, it does some work and releases the lock.
+If it acquired the lock, it does some work and releases the lock.
 
 ```php 
  use ThatsUs\RedLock\Facades\RedLock;
@@ -44,7 +44,7 @@ If it aquired the lock, it does some work and releases the lock.
 
 ### Refresh
 
-Use `refreshLock()` to reaquire and extend the time of your lock.
+Use `refreshLock()` to reacquire and extend the time of your lock.
 
 ```php 
  use ThatsUs\RedLock\Facades\RedLock;
@@ -65,7 +65,7 @@ Use `refreshLock()` to reaquire and extend the time of your lock.
 
 ### Even Easier with Closures
 
-Use `runLocked()` for nicer syntax. The method returns the results of the closure, or else false if the lock could not be aquired.
+Use `runLocked()` for nicer syntax. The method returns the results of the closure, or else false if the lock could not be acquired.
 
 ```php
  use ThatsUs\RedLock\Facades\RedLock;
@@ -77,7 +77,7 @@ Use `runLocked()` for nicer syntax. The method returns the results of the closur
      return true;
  });
 
- echo $result ? 'Worked!' : 'Lock not aquired.';
+ echo $result ? 'Worked!' : 'Lock not acquired.';
 ```
 
 ### Refresh with Closures
@@ -97,7 +97,7 @@ You can refresh your tokens with closures too. The first parameter to your closu
      return true;
  });
 
- echo $result ? 'Worked!' : 'Lock lost or never aquired.';
+ echo $result ? 'Worked!' : 'Lock lost or never acquired.';
 ```
 
 ### Lock Queue Jobs Easily

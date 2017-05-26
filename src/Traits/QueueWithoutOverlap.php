@@ -13,7 +13,7 @@ trait QueueWithoutOverlap
 
     /**
      * Put this job on that queue. Or don't 
-     * if we fail to aquire the lock.
+     * if we fail to acquire the lock.
      * @return string|bool - queue code or false
      */
     public function queue($queue, $command)
@@ -34,7 +34,7 @@ trait QueueWithoutOverlap
      * jobs can run with the same key.
      * @return bool - false if it fails to lock
      */
-    protected function aquireLock(array $lock = [])
+    protected function acquireLock(array $lock = [])
     {
         $this->lock = RedLock::lock($lock['resource'] ?? $this->getLockKey(), $this->lock_time * 1000);
         return (bool)$this->lock;
@@ -115,13 +115,13 @@ trait QueueWithoutOverlap
     }
 
     /**
-     * Attempt to reaquire and extend the lock.
-     * @return bool true if the lock is reaquired, false if it is not
+     * Attempt to reacquire and extend the lock.
+     * @return bool true if the lock is reacquired, false if it is not
      */
     protected function refreshLock()
     {
         $this->releaseLock();
-        if (!$this->aquireLock($this->lock)) {
+        if (!$this->acquireLock($this->lock)) {
             throw new QueueWithoutOverlapRefreshException();
         }
     }
