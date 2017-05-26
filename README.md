@@ -1,6 +1,8 @@
 # Laravel RedLock
 
-Provides a locking mechanism using Redis. Implements the locking standard proposed by Redis.
+Provides a generic locking mechanism using Redis. Implements the locking standard proposed by Redis.
+
+
 
 ### Acknowledgements
 
@@ -13,16 +15,29 @@ This library was originally built by LibiChai, then reworked by the team at That
 3. Enjoy!
 
 
+### It's Simple!
+
+Set a lock on any scalar. If the `lock()` method returns false, you did not aquire the lock.
+
+Store results of the `lock()` method. Use this value to release the lock with `unlock()`.
+
 ### Example
 
- ```php 
+This example sets a lock on the key "1" with a 3 second expiration time.
+
+If it aquired the lock, it does some work and releases the lock.
+
+```php 
  use ThatsUs\Facades\RedLock;
 
  $product_id = 1;
 
- $locktoken = RedLock::lock($product_id);
+ $lock_token = RedLock::lock($product_id, 3000);
+ 
+ if ($lock_token) {
 
- $order->submit($product_id, $user); 
+     $order->submit($product_id, $user); 
 
- RedLock::unlock($locktoken); 
- ```
+     RedLock::unlock($lock_token);
+ }
+```
