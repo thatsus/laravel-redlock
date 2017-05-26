@@ -112,7 +112,7 @@ The `ThatsUs\RedLock\Traits\QueueWithoutOverlap` trait provides this functionali
 ```php
 use ThatsUs\RedLock\Traits\QueueWithoutOverlap;
 
-class OrderProduct
+class OrderProductJob
 {
     use QueueWithoutOverlap;
 
@@ -139,7 +139,7 @@ This trait also provides a refresh method called `refreshLock()`. If `refreshLoc
 ```php
 use ThatsUs\RedLock\Traits\QueueWithoutOverlap;
 
-class OrderProducts
+class OrderProductsJob
 {
     use QueueWithoutOverlap;
 
@@ -154,7 +154,7 @@ class OrderProducts
     protected function getLockKey()
     {
         $product_ids = implode(',', $this->product_ids);
-        return "OrderProducts:{$this->order->id}:{$product_ids}";
+        return "OrderProductsJob:{$this->order->id}:{$product_ids}";
     }
 
     public function handleSync()
