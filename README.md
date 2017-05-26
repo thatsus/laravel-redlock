@@ -106,7 +106,7 @@ If you're running jobs on a Laravel queue, you may want to avoid queuing up the 
 
 The `ThatsUs\RedLock\Traits\QueueWithoutOverlap` trait provides this functionality with very few changes to your job. Usually only two changes are necessary.
 
-1. `use ThatsUs\RedLock\Traits\QueueWithoutOverlap`
+1. `use ThatsUs\RedLock\Traits\QueueWithoutOverlap` as a trait
 2. Change the `handle()` method to `handleSync()`
 
 ```
@@ -132,9 +132,9 @@ class OrderProduct
 
 Sometimes it's also necessary to specify a `getLockKey()` method. This method must return the string that needs to be locked.
 
-Usually the lock key is generated automatically based on the class name and the data. But if the data is not easy to stringify, you must define the `getLockKey()` method.
+This is typically unnecessary because the lock key can be generated automatically. But if the job's data is not easy to stringify, you must define the `getLockKey()` method.
 
-This trait also provides a refresh method called `refreshLock()`. If `refreshLock()` is unable to refresh the lock, an exception is thrown and the job is a failure.
+This trait also provides a refresh method called `refreshLock()`. If `refreshLock()` is unable to refresh the lock, an exception is thrown and the job fails.
 
 ```
 use ThatsUs\RedLock\Traits\QueueWithoutOverlap;
@@ -160,8 +160,8 @@ class OrderProducts
     public function handleSync()
     {
         foreach ($this->product_ids as $product_id) {
-            $this->order->submit($product_id);
             $this->refreshLock();
+            $this->order->submit($product_id);
         }
     }
 
