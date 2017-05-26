@@ -45,6 +45,7 @@ class RedLock
                     'validity' => $validityTime,
                     'resource' => $resource,
                     'token'    => $token,
+                    'ttl'      => $ttl,
                 ];
             } else {
                 foreach ($this->instances as $instance) {
@@ -98,5 +99,11 @@ class RedLock
         ';
         return $instance->eval($script, 1, $resource, $token);
         //return $instance->eval($script, [$resource, $token], 1);
+    }
+
+    public function refreshLock(array $lock)
+    {
+        $this->unlock($lock);
+        return $this->lock($lock['resource'], $lock['ttl']);
     }
 }

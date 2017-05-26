@@ -83,4 +83,30 @@ class RedLockTest extends TestCase
             'token' => 1234,
         ]);
     }
+
+    public function testRefresh()
+    {
+        $predis = Mockery::mock(Redis::class);
+        $predis->shouldReceive('eval')
+            ->with(Mockery::any(), 1, 'XYZ', '1234')
+            ->once()
+            ->andReturn(true);
+        $predis->shouldReceive('set')
+            ->with('XYZ', Mockery::any(), "PX", 300000, "NX")
+            ->once()
+            ->andReturn(true);
+        App::instance(Redis::class, $predis);
+
+        $redlock = new RedLock([['tester']]);
+        $lock = $redlock->refreshLock([
+            'resource' => 'XYZ', 
+            'validity' => 300000,
+            'token' => 1234,
+            'ttl' => 300000,
+        ]);
+
+        $this->assertEquals('XYZ', $lock['resource']);
+        $this->assertTrue(is_numeric($lock['validity']));
+        $this->assertNotNull($lock['token']);
+    }
 }
