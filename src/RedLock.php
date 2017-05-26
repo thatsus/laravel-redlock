@@ -13,13 +13,15 @@ class RedLock
     private $quorum;
     private $servers = array();
     private $instances = array();
-    function __construct(array $servers, $retryDelay = 200, $retryCount = 3)
+
+    public function __construct(array $servers, $retryDelay = 200, $retryCount = 3)
     {
         $this->servers = $servers;
         $this->retryDelay = $retryDelay;
         $this->retryCount = $retryCount;
-        $this->quorum  = min(count($servers), (count($servers) / 2 + 1));
+        $this->quorum = min(count($servers), (count($servers) / 2 + 1));
     }
+
     public function lock($resource, $ttl)
     {
         $this->initInstances();
@@ -56,6 +58,7 @@ class RedLock
         } while ($retry > 0);
         return false;
     }
+
     public function unlock(array $lock)
     {
         $this->initInstances();
@@ -65,6 +68,7 @@ class RedLock
             $this->unlockInstance($instance, $resource, $token);
         }
     }
+
     private function initInstances()
     {
         if (empty($this->instances)) {
@@ -76,11 +80,13 @@ class RedLock
             }
         }
     }
+
     private function lockInstance($instance, $resource, $token, $ttl)
     {
-        return $instance->set($resource, $token,"PX",$ttl,"NX");
+        return $instance->set($resource, $token, "PX", $ttl, "NX");
         //return $instance->set($resource, $token, ['NX', 'PX' => $ttl]);
     }
+
     private function unlockInstance($instance, $resource, $token)
     {
         $script = '
