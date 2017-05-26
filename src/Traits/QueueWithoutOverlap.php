@@ -4,6 +4,7 @@ namespace ThatsUs\RedLock\Traits;
 
 use ThatsUs\RedLock\Facades\RedLock;
 use Illuminate\Database\Eloquent\Model;
+use ThatsUs\RedLock\Exceptions\QueueWithoutOverlapRefreshException;
 
 trait QueueWithoutOverlap
 {
@@ -106,8 +107,11 @@ trait QueueWithoutOverlap
      */
     public function handle()
     {
-        $this->handleSync();
-        $this->releaseLock();
+        try {
+            $this->handleSync();
+        } finally {
+            $this->releaseLock();
+        }
     }
 
     /**
@@ -117,6 +121,8 @@ trait QueueWithoutOverlap
     protected function refreshLock()
     {
         $this->releaseLock();
-        return $this->aquireLock($this->lock ?: []);
+        if (!$this->aquireLock($this->lock)) {
+            throw new QueueWithoutOverlapRefreshException();
+        }
     }
 }

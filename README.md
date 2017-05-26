@@ -82,7 +82,7 @@ Use `runLocked()` for nicer syntax. The method returns the results of the closur
 
 ### Refresh with Closures
 
-You can refresh your tokens with closures too. The first parameter to your closure is a $refresh closure. Call it to refresh. If the lock cannot be refreshed, the closure will return.
+You can refresh your tokens with closures too. The first parameter to your closure is a `$refresh` closure. Call it to refresh. If the lock cannot be refreshed, the closure will return.
 
 ```php
  use ThatsUs\RedLock\Facades\RedLock;
@@ -98,6 +98,74 @@ You can refresh your tokens with closures too. The first parameter to your closu
  });
 
  echo $result ? 'Worked!' : 'Lock lost or never aquired.';
+```
+
+### Lock Queue Jobs Easily
+
+If you're running jobs on a Laravel queue, you may want to avoid queuing up the same job more than once at a time.
+
+The `ThatsUs\RedLock\Traits\QueueWithoutOverlap` trait provides this functionality with very few changes to your job. Usually only two changes are necessary.
+
+1. `use ThatsUs\RedLock\Traits\QueueWithoutOverlap`
+2. Change the `handle()` method to `handleSync()`
+
+```
+use ThatsUs\RedLock\Traits\QueueWithoutOverlap;
+
+class OrderProduct
+{
+    use QueueWithoutOverlap;
+
+    public function __construct($order, $product_id)
+    {
+        $this->order = $order;
+        $this->product_id = $product_id;
+    }
+
+    public function handleSync()
+    {
+        $this->order->submit($this->product_id);
+    }
+
+}
+```
+
+Sometimes it's also necessary to specify a `getLockKey()` method. This method must return the string that needs to be locked.
+
+Usually the lock key is generated automatically based on the class name and the data. But if the data is not easy to stringify, you must define the `getLockKey()` method.
+
+This trait also provides a refresh method called `refreshLock()`. If `refreshLock()` is unable to refresh the lock, an exception is thrown and the job is a failure.
+
+```
+use ThatsUs\RedLock\Traits\QueueWithoutOverlap;
+
+class OrderProducts
+{
+    use QueueWithoutOverlap;
+
+    public function __construct($order, array $product_ids)
+    {
+        $this->order = $order;
+        $this->product_ids = $product_ids;
+    }
+
+    // We need to define getLockKey() because $product_ids is an array and the
+    // automatic key generator can't deal with arrays.
+    protected function getLockKey()
+    {
+        $product_ids = implode(',', $this->product_ids);
+        return "OrderProducts:{$this->order->id}:{$product_ids}";
+    }
+
+    public function handleSync()
+    {
+        foreach ($this->product_ids as $product_id) {
+            $this->order->submit($product_id);
+            $this->refreshLock();
+        }
+    }
+
+}
 ```
 
 
