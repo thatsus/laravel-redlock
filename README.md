@@ -82,7 +82,7 @@ Use `runLocked()` for nicer syntax. The method returns the results of the closur
 
 ### Refresh with Closures
 
-You can refresh your tokens with closures too. The first parameter to your closure is a `$refresh` closure. Call it to refresh. If the lock cannot be refreshed, the closure will return.
+You can refresh your tokens when using closures easily. The first parameter to your closure is `$refresh`. Simply call it when you want to refresh. If the lock cannot be refreshed, the closure will return.
 
 ```php
  use ThatsUs\RedLock\Facades\RedLock;
