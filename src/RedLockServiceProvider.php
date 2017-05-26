@@ -3,7 +3,7 @@
 namespace ThatsUs\RedLock;
 
 use Illuminate\Support\ServiceProvider;
-use LibiChai\RedLock\RedLock;
+use ThatsUs\RedLock\RedLock;
 
 class RedLockServiceProvider extends ServiceProvider{
     /**
