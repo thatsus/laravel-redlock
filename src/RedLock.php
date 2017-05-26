@@ -3,6 +3,7 @@
 namespace ThatsUs\RedLock;
 
 use Predis\Client as Redis;
+use Illuminate\Support\Facades\App;
 
 class RedLock
 {
@@ -69,7 +70,7 @@ class RedLock
         if (empty($this->instances)) {
             foreach ($this->servers as $server) {
                 //list($host, $port, $database) = $server;
-                $redis = new Redis($server);
+                $redis = App::make(Redis::class, [$server]);
                 //$redis->connect($host, $port, $timeout);
                 $this->instances[] = $redis;
             }

@@ -2,15 +2,12 @@
 
 namespace ThatsUs\RedLock\Traits;
 
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use ThatsUs\RedLock\Facades\RedLock;
 use Mockery;
 use TestCase;
 
 class QueueWithoutOverlapTest extends TestCase
 {
-    use DatabaseTransactions;
-
     public function testInstanciate()
     {
         new QueueWithoutOverlapJob();
