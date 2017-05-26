@@ -1,0 +1,1 @@
+<div>{{ json_encode([$object, $a, $b, $c]) }}</div>

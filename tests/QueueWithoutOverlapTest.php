@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Traits;
+namespace ThatsUs\RedLock\Traits;
 
-use Laravel\Lumen\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use ThatsUs\RedLock\Facades\RedLock;
 use Mockery;
-use Tests\TestCase;
+use TestCase;
 
 class QueueWithoutOverlapTest extends TestCase
 {
@@ -24,7 +24,7 @@ class QueueWithoutOverlapTest extends TestCase
         $queue->shouldReceive('push')->with($job)->once();
 
         RedLock::shouldReceive('lock')
-            ->with("App\Traits\QueueWithoutOverlapJob:::300", 300000)
+            ->with("ThatsUs\RedLock\Traits\QueueWithoutOverlapJob:::300", 300000)
             ->once()
             ->andReturn(['this is a lock']);
         RedLock::shouldReceive('unlock')

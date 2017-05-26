@@ -21,12 +21,18 @@
     "predis/predis": "^1.1"
   },
   "require-dev": {
-    "laravel/lumen-framework": "5.4.*"
+    "laravel/framework": "5.1.*",
+    "php-mock/php-mock-mockery": "^1.1"
   },
   "autoload": {
     "psr-4": {
       "ThatsUs\\RedLock\\": "src/"
     }
+  },
+  "autoload-dev": {
+    "classmap": [
+      "tests/"
+    ]
   },
   "minimum-stability": "stable"
 }
