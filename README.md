@@ -1,4 +1,4 @@
-# Laravel RedLock
+# Laravel RedLock (That's Us Version)
 一个基于laravel框架的redis分布式锁。一般用于高并发抢单，支付等原子性操作的锁操作。
 
 ### 关于
