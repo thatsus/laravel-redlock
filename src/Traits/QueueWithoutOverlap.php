@@ -33,9 +33,9 @@ trait QueueWithoutOverlap
      * jobs can run with the same key.
      * @return bool - false if it fails to lock
      */
-    protected function aquireLock()
+    protected function aquireLock(array $lock = [])
     {
-        $this->lock = RedLock::lock($this->getLockKey(), $this->lock_time * 1000);
+        $this->lock = RedLock::lock($lock['resource'] ?? $this->getLockKey(), $this->lock_time * 1000);
         return (bool)$this->lock;
     }
 
@@ -108,5 +108,15 @@ trait QueueWithoutOverlap
     {
         $this->handleSync();
         $this->releaseLock();
+    }
+
+    /**
+     * Attempt to reaquire and extend the lock.
+     * @return bool true if the lock is reaquired, false if it is not
+     */
+    protected function refreshLock()
+    {
+        $this->releaseLock();
+        return $this->aquireLock($this->lock ?: []);
     }
 }

@@ -20,6 +20,7 @@ class QueueWithoutOverlapJob
 
     public function handleSync()
     {
+        $this->refreshLock();
         $this->ran = true;
     }
 }

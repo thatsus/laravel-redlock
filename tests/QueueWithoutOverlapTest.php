@@ -22,11 +22,11 @@ class QueueWithoutOverlapTest extends TestCase
 
         RedLock::shouldReceive('lock')
             ->with("ThatsUs\RedLock\Traits\QueueWithoutOverlapJob:::300", 300000)
-            ->once()
-            ->andReturn(['this is a lock']);
+            ->twice()
+            ->andReturn(['resource' => 'ThatsUs\RedLock\Traits\QueueWithoutOverlapJob:::300']);
         RedLock::shouldReceive('unlock')
-            ->with(['this is a lock'])
-            ->once()
+            ->with(['resource' => 'ThatsUs\RedLock\Traits\QueueWithoutOverlapJob:::300'])
+            ->twice()
             ->andReturn(true);
 
         $job->queue($queue, $job);
