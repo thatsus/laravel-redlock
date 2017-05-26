@@ -106,4 +106,15 @@ class RedLock
         $this->unlock($lock);
         return $this->lock($lock['resource'], $lock['ttl']);
     }
+
+    public function runLocked($resource, $ttl, $closure)
+    {
+        $lock = $this->lock($resource, $ttl);
+        if (!$lock) {
+            return false;
+        }
+        $result = $closure();
+        $this->unlock($lock);
+        return $result;
+    }
 }
