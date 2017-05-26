@@ -21,7 +21,7 @@ trait QueueWithoutOverlap
         if (!method_exists($this, 'handleSync')) {
             throw new \Exception('Please define handleSync() on the job ' . get_class($this) . '.');
         }
-        if ($this->aquireLock()) {
+        if ($this->acquireLock()) {
             return $this->pushCommandToQueue($queue, $command);
         } else {
             // do nothing, could not get lock
