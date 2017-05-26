@@ -17,4 +17,9 @@ class RedLockFacadeTest extends TestCase
 
         RedLock::doodad();
     }
+
+    public function testRoot()
+    {
+        $this->assertTrue(RedLock::getFacadeRoot() instanceof \ThatsUs\RedLock\RedLock);
+    }
 }
