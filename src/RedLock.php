@@ -113,8 +113,9 @@ class RedLock
         if (!$lock) {
             return false;
         }
-        $refresh = function () use ($lock) {
-            if (!$this->refreshLock($lock)) {
+        $refresh = function () use (&$lock) {
+            $lock = $this->refreshLock($lock);
+            if (!$lock) {
                 throw new Exceptions\ClosureRefreshException();
             }
         };
@@ -123,7 +124,9 @@ class RedLock
         } catch (Exceptions\ClosureRefreshException $e) {
             return false;
         } finally {
-            $this->unlock($lock);
+            if (is_array($lock)) {
+                $this->unlock($lock);
+            }
         }
         return $result;
     }

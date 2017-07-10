@@ -11,6 +11,10 @@
     {
       "name": "Daniel Kuck-Alvarez",
       "email": "dkuck@thatsus.com"
+    },
+    {
+      "name": "Potsky",
+      "email": "potsky@me.com"
     }
   ],
   "require": {
@@ -21,7 +25,8 @@
   },
   "require-dev": {
     "laravel/framework": "5.1.*",
-    "php-mock/php-mock-mockery": "^1.1"
+    "php-mock/php-mock-mockery": "^1.1",
+    "phpunit/phpunit": "~5.7"
   },
   "autoload": {
     "psr-4": {
