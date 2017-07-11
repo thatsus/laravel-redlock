@@ -162,7 +162,7 @@ class RedLockTest extends TestCase
             ->andReturn(true, false, false, false);
         $predis->shouldReceive('eval')
             ->with(Mockery::any(), 1, 'XYZ', Mockery::any())
-            ->times(5)
+            ->times(4)
             ->andReturn(true);
         App::instance(Redis::class, $predis);
 
