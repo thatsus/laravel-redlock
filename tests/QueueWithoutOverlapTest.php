@@ -21,11 +21,11 @@ class QueueWithoutOverlapTest extends TestCase
         $queue->shouldReceive('push')->with($job)->once();
 
         RedLock::shouldReceive('lock')
-            ->with("ThatsUs\RedLock\Traits\QueueWithoutOverlapJob:::300", 300000)
+            ->with("ThatsUs\RedLock\Traits\QueueWithoutOverlapJob::1000:", 1000000)
             ->twice()
-            ->andReturn(['resource' => 'ThatsUs\RedLock\Traits\QueueWithoutOverlapJob:::300']);
+            ->andReturn(['resource' => 'ThatsUs\RedLock\Traits\QueueWithoutOverlapJob::1000:']);
         RedLock::shouldReceive('unlock')
-            ->with(['resource' => 'ThatsUs\RedLock\Traits\QueueWithoutOverlapJob:::300'])
+            ->with(['resource' => 'ThatsUs\RedLock\Traits\QueueWithoutOverlapJob::1000:'])
             ->twice()
             ->andReturn(true);
 
@@ -43,7 +43,7 @@ class QueueWithoutOverlapTest extends TestCase
         $queue = Mockery::mock();
 
         RedLock::shouldReceive('lock')
-            ->with("ThatsUs\RedLock\Traits\QueueWithoutOverlapJob:::300", 300000)
+            ->with("ThatsUs\RedLock\Traits\QueueWithoutOverlapJob::1000:", 1000000)
             ->once()
             ->andReturn(false);
 
@@ -60,14 +60,14 @@ class QueueWithoutOverlapTest extends TestCase
         $queue->shouldReceive('push')->with($job)->once();
 
         RedLock::shouldReceive('lock')
-            ->with("ThatsUs\RedLock\Traits\QueueWithoutOverlapJob:::300", 300000)
+            ->with("ThatsUs\RedLock\Traits\QueueWithoutOverlapJob::1000:", 1000000)
             ->twice()
             ->andReturn(
-                ['resource' => 'ThatsUs\RedLock\Traits\QueueWithoutOverlapJob:::300'],
+                ['resource' => 'ThatsUs\RedLock\Traits\QueueWithoutOverlapJob::1000:'],
                 false
             );
         RedLock::shouldReceive('unlock')
-            ->with(['resource' => 'ThatsUs\RedLock\Traits\QueueWithoutOverlapJob:::300'])
+            ->with(['resource' => 'ThatsUs\RedLock\Traits\QueueWithoutOverlapJob::1000:'])
             ->once()
             ->andReturn(true);
 
@@ -76,5 +76,28 @@ class QueueWithoutOverlapTest extends TestCase
         $this->expectException('ThatsUs\RedLock\Exceptions\QueueWithoutOverlapRefreshException');
 
         $job->handle();
+    }
+
+    public function testAllOfItDefaultLockTime()
+    {
+        $job = new QueueWithoutOverlapJobDefaultLockTime();
+
+        $queue = Mockery::mock();
+        $queue->shouldReceive('push')->with($job)->once();
+
+        RedLock::shouldReceive('lock')
+            ->with("ThatsUs\RedLock\Traits\QueueWithoutOverlapJobDefaultLockTime::", 300000)
+            ->twice()
+            ->andReturn(['resource' => "ThatsUs\RedLock\Traits\QueueWithoutOverlapJobDefaultLockTime::"]);
+        RedLock::shouldReceive('unlock')
+            ->with(['resource' => "ThatsUs\RedLock\Traits\QueueWithoutOverlapJobDefaultLockTime::"])
+            ->twice()
+            ->andReturn(true);
+
+        $job->queue($queue, $job);
+
+        $job->handle();
+
+        $this->assertTrue($job->ran);
     }
 }

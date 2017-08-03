@@ -8,16 +8,15 @@ namespace ThatsUs\RedLock\Traits;
 |--------------------------------------------------------------------------
 |
 | This class is for testing the WithoutOverlap trait. It just uses the 
-| trait and that's all.
+| trait and that's all. This time without a $lock_time specified
 |
 */
 
-class QueueWithoutOverlapJob
+class QueueWithoutOverlapJobDefaultLockTime
 {
     use QueueWithoutOverlap;
 
     public $ran = false;
-    protected $lock_time = 1000;
 
     public function handleSync()
     {
