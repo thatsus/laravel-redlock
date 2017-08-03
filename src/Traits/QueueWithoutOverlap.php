@@ -9,7 +9,6 @@ use ThatsUs\RedLock\Exceptions\QueueWithoutOverlapRefreshException;
 trait QueueWithoutOverlap
 {
     protected $lock;
-    protected $lock_time = 300; // in seconds; 5 minutes default
 
     /**
      * Put this job on that queue. Or don't 
@@ -36,7 +35,8 @@ trait QueueWithoutOverlap
      */
     protected function acquireLock(array $lock = [])
     {
-        $this->lock = RedLock::lock($lock['resource'] ?? $this->getLockKey(), $this->lock_time * 1000);
+        $lock_time = isset($this->lock_time) ? $this->lock_time : 300; // in seconds; 5 minutes default
+        $this->lock = RedLock::lock($lock['resource'] ?? $this->getLockKey(), $lock_time * 1000);
         return (bool)$this->lock;
     }
 
