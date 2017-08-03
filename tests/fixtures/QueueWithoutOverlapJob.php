@@ -17,6 +17,7 @@ class QueueWithoutOverlapJob
     use QueueWithoutOverlap;
 
     public $ran = false;
+    protected $lock_time = 1000;
 
     public function handleSync()
     {
