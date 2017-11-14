@@ -11,7 +11,7 @@ class RedLockTest extends TestCase
 {
     public function testInstanciate()
     {
-        new RedLock([]);
+        $this->assertInstanceOf(RedLock::class, new RedLock([]));
     }
 
     public function testLock()
@@ -21,7 +21,9 @@ class RedLockTest extends TestCase
             ->with('XYZ', Mockery::any(), "PX", 300000, "NX")
             ->once()
             ->andReturn(true);
-        App::instance(Redis::class, $predis);
+        App::singleton(Redis::class, function($app) use ($predis) {
+            return $predis;
+        });
 
         $redlock = new RedLock([['tester']]);
         $lock = $redlock->lock('XYZ', 300000);
@@ -38,7 +40,9 @@ class RedLockTest extends TestCase
             ->with(Mockery::any(), 1, 'XYZ', '1234')
             ->once()
             ->andReturn(true);
-        App::instance(Redis::class, $predis);
+        App::singleton(Redis::class, function($app) use ($predis) {
+            return $predis;
+        });
 
         $redlock = new RedLock([['tester']]);
         $redlock->unlock([
@@ -59,7 +63,9 @@ class RedLockTest extends TestCase
             ->with(Mockery::any(), 1, 'XYZ', Mockery::any())
             ->times(3)
             ->andReturn(true);
-        App::instance(Redis::class, $predis);
+        App::singleton(Redis::class, function($app) use ($predis) {
+            return $predis;
+        });
 
         $redlock = new RedLock([['tester']]);
         $lock = $redlock->lock('XYZ', 300000);
@@ -74,7 +80,9 @@ class RedLockTest extends TestCase
             ->with(Mockery::any(), 1, 'XYZ', '1234')
             ->once()
             ->andReturn(false);
-        App::instance(Redis::class, $predis);
+        App::singleton(Redis::class, function($app) use ($predis) {
+            return $predis;
+        });
 
         $redlock = new RedLock([['tester']]);
         $redlock->unlock([
@@ -95,7 +103,9 @@ class RedLockTest extends TestCase
             ->with('XYZ', Mockery::any(), "PX", 300000, "NX")
             ->once()
             ->andReturn(true);
-        App::instance(Redis::class, $predis);
+        App::singleton(Redis::class, function($app) use ($predis) {
+            return $predis;
+        });
 
         $redlock = new RedLock([['tester']]);
         $lock = $redlock->refreshLock([
@@ -121,7 +131,9 @@ class RedLockTest extends TestCase
             ->with(Mockery::any(), 1, 'XYZ', Mockery::any())
             ->once()
             ->andReturn(true);
-        App::instance(Redis::class, $predis);
+        App::singleton(Redis::class, function($app) use ($predis) {
+            return $predis;
+        });
 
         $redlock = new RedLock([['tester']]);
         $results = $redlock->runLocked('XYZ', 300000, function () {
@@ -142,7 +154,9 @@ class RedLockTest extends TestCase
             ->with(Mockery::any(), 1, 'XYZ', Mockery::any())
             ->twice()
             ->andReturn(true);
-        App::instance(Redis::class, $predis);
+        App::singleton(Redis::class, function($app) use ($predis) {
+            return $predis;
+        });
 
         $redlock = new RedLock([['tester']]);
         $results = $redlock->runLocked('XYZ', 300000, function ($refresh) {
@@ -164,7 +178,9 @@ class RedLockTest extends TestCase
             ->with(Mockery::any(), 1, 'XYZ', Mockery::any())
             ->times(4)
             ->andReturn(true);
-        App::instance(Redis::class, $predis);
+        App::singleton(Redis::class, function($app) use ($predis) {
+            return $predis;
+        });
 
         $redlock = new RedLock([['tester']]);
         $results = $redlock->runLocked('XYZ', 300000, function ($refresh) {
