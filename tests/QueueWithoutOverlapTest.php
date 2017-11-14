@@ -10,7 +10,7 @@ class QueueWithoutOverlapTest extends TestCase
 {
     public function testInstanciate()
     {
-        new QueueWithoutOverlapJob();
+        $this->assertInstanceOf(QueueWithoutOverlapJob::class, new QueueWithoutOverlapJob());
     }
 
     public function testAllOfIt()
