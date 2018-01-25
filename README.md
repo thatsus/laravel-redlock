@@ -60,11 +60,6 @@ Use `refreshLock()` to reacquire and extend the time of your lock.
      $lock_token = RedLock::refreshLock($lock_token);
  }
 
- if ($product_ids) {
-    // Uh oh, we lost the lock and there are still products to submit ...
-    // Do something smart here.
- }
-
  RedLock::unlock($lock_token);
 ```
 
