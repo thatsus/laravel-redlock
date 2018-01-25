@@ -53,11 +53,16 @@ Use `refreshLock()` to reacquire and extend the time of your lock.
 
  $lock_token = RedLock::lock('order-submitter', 3000);
  
- while ($lock_token) {
+ while ($product_ids && $lock_token) {
 
      $order->submit(array_shift($product_ids));
 
      $lock_token = RedLock::refreshLock($lock_token);
+ }
+
+ if ($product_ids) {
+    // Uh oh, we lost the lock and there are still products to submit ...
+    // Do something smart here.
  }
 
  RedLock::unlock($lock_token);
@@ -82,7 +87,7 @@ Use `runLocked()` for nicer syntax. The method returns the results of the closur
 
 ### Refresh with Closures
 
-You can easily refresh your tokens when using closures. The first parameter to your closure is `$refresh`. Simply call it when you want to refresh. If the lock cannot be refreshed, the closure will return.
+You can easily refresh your tokens when using closures. The first parameter to your closure is `$refresh`. Simply call it when you want to refresh. If the lock cannot be refreshed, `$refresh()` will break out of the closure.
 
 ```php
  use ThatsUs\RedLock\Facades\RedLock;
