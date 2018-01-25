@@ -38,5 +38,12 @@
       "tests/"
     ]
   },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "ThatsUs\\RedLock\\RedLockServiceProvider"
+      ]
+    }
+  },
   "minimum-stability": "stable"
 }
