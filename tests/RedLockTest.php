@@ -9,6 +9,15 @@ use Illuminate\Support\Facades\App;
 
 class RedLockTest extends TestCase
 {
+    private $servers = [
+        [
+            'host'     => 'host.test',
+            'password' => 'password',
+            'port'     => 6379,
+            'database' => 0,
+        ],
+    ];
+
     public function testInstanciate()
     {
         new RedLock([]);
@@ -16,14 +25,16 @@ class RedLockTest extends TestCase
 
     public function testLock()
     {
-        $predis = Mockery::mock(Redis::class);
-        $predis->shouldReceive('set')
-            ->with('XYZ', Mockery::any(), "PX", 300000, "NX")
-            ->once()
-            ->andReturn(true);
-        App::instance(Redis::class, $predis);
+        App::bind(Redis::class, function() {
+            $predis = Mockery::mock(Redis::class);
+            $predis->shouldReceive('set')
+                ->with('XYZ', Mockery::any(), "PX", 300000, "NX")
+                ->once()
+                ->andReturn(true);
+            return $predis; 
+        });
 
-        $redlock = new RedLock([['tester']]);
+        $redlock = new RedLock($this->servers);
         $lock = $redlock->lock('XYZ', 300000);
 
         $this->assertEquals('XYZ', $lock['resource']);
@@ -33,14 +44,16 @@ class RedLockTest extends TestCase
 
     public function testUnlock()
     {
-        $predis = Mockery::mock(Redis::class);
-        $predis->shouldReceive('eval')
-            ->with(Mockery::any(), 1, 'XYZ', '1234')
-            ->once()
-            ->andReturn(true);
-        App::instance(Redis::class, $predis);
+        App::bind(Redis::class, function () {
+            $predis = Mockery::mock(Redis::class);
+            $predis->shouldReceive('eval')
+                ->with(Mockery::any(), 1, 'XYZ', '1234')
+                ->once()
+                ->andReturn(true);
+            return $predis;
+        });
 
-        $redlock = new RedLock([['tester']]);
+        $redlock = new RedLock($this->servers);
         $redlock->unlock([
             'resource' => 'XYZ', 
             'validity' => 300000,
@@ -50,18 +63,20 @@ class RedLockTest extends TestCase
 
     public function testLockFail()
     {
-        $predis = Mockery::mock(Redis::class);
-        $predis->shouldReceive('set')
-            ->with('XYZ', Mockery::any(), "PX", 300000, "NX")
-            ->times(3)
-            ->andReturn(false);
-        $predis->shouldReceive('eval')
-            ->with(Mockery::any(), 1, 'XYZ', Mockery::any())
-            ->times(3)
-            ->andReturn(true);
-        App::instance(Redis::class, $predis);
+        App::bind(Redis::class, function () {
+            $predis = Mockery::mock(Redis::class);
+            $predis->shouldReceive('set')
+                ->with('XYZ', Mockery::any(), "PX", 300000, "NX")
+                ->times(3)
+                ->andReturn(false);
+            $predis->shouldReceive('eval')
+                ->with(Mockery::any(), 1, 'XYZ', Mockery::any())
+                ->times(3)
+                ->andReturn(true);
+            return $predis;
+        });
 
-        $redlock = new RedLock([['tester']]);
+        $redlock = new RedLock($this->servers);
         $lock = $redlock->lock('XYZ', 300000);
 
         $this->assertFalse($lock);
@@ -69,14 +84,16 @@ class RedLockTest extends TestCase
 
     public function testUnlockFail()
     {
-        $predis = Mockery::mock(Redis::class);
-        $predis->shouldReceive('eval')
-            ->with(Mockery::any(), 1, 'XYZ', '1234')
-            ->once()
-            ->andReturn(false);
-        App::instance(Redis::class, $predis);
+        App::bind(Redis::class, function () {
+            $predis = Mockery::mock(Redis::class);
+            $predis->shouldReceive('eval')
+                ->with(Mockery::any(), 1, 'XYZ', '1234')
+                ->once()
+                ->andReturn(false);
+            return $predis;
+        });
 
-        $redlock = new RedLock([['tester']]);
+        $redlock = new RedLock($this->servers);
         $redlock->unlock([
             'resource' => 'XYZ', 
             'validity' => 300000,
@@ -86,18 +103,20 @@ class RedLockTest extends TestCase
 
     public function testRefresh()
     {
-        $predis = Mockery::mock(Redis::class);
-        $predis->shouldReceive('eval')
-            ->with(Mockery::any(), 1, 'XYZ', '1234')
-            ->once()
-            ->andReturn(true);
-        $predis->shouldReceive('set')
-            ->with('XYZ', Mockery::any(), "PX", 300000, "NX")
-            ->once()
-            ->andReturn(true);
-        App::instance(Redis::class, $predis);
+        App::bind(Redis::class, function () {
+            $predis = Mockery::mock(Redis::class);
+            $predis->shouldReceive('eval')
+                ->with(Mockery::any(), 1, 'XYZ', '1234')
+                ->once()
+                ->andReturn(true);
+            $predis->shouldReceive('set')
+                ->with('XYZ', Mockery::any(), "PX", 300000, "NX")
+                ->once()
+                ->andReturn(true);
+            return $predis;
+        });
 
-        $redlock = new RedLock([['tester']]);
+        $redlock = new RedLock($this->servers);
         $lock = $redlock->refreshLock([
             'resource' => 'XYZ', 
             'validity' => 300000,
@@ -112,18 +131,20 @@ class RedLockTest extends TestCase
 
     public function testRunLocked()
     {
-        $predis = Mockery::mock(Redis::class);
-        $predis->shouldReceive('set')
-            ->with('XYZ', Mockery::any(), "PX", 300000, "NX")
-            ->once()
-            ->andReturn(true);
-        $predis->shouldReceive('eval')
-            ->with(Mockery::any(), 1, 'XYZ', Mockery::any())
-            ->once()
-            ->andReturn(true);
-        App::instance(Redis::class, $predis);
+        App::bind(Redis::class, function () {
+            $predis = Mockery::mock(Redis::class);
+            $predis->shouldReceive('set')
+                ->with('XYZ', Mockery::any(), "PX", 300000, "NX")
+                ->once()
+                ->andReturn(true);
+            $predis->shouldReceive('eval')
+                ->with(Mockery::any(), 1, 'XYZ', Mockery::any())
+                ->once()
+                ->andReturn(true);
+            return $predis;
+        });
 
-        $redlock = new RedLock([['tester']]);
+        $redlock = new RedLock($this->servers);
         $results = $redlock->runLocked('XYZ', 300000, function () {
             return "ABC";
         });
@@ -133,18 +154,20 @@ class RedLockTest extends TestCase
 
     public function testRunLockedRefresh()
     {
-        $predis = Mockery::mock(Redis::class);
-        $predis->shouldReceive('set')
-            ->with('XYZ', Mockery::any(), "PX", 300000, "NX")
-            ->twice()
-            ->andReturn(true);
-        $predis->shouldReceive('eval')
-            ->with(Mockery::any(), 1, 'XYZ', Mockery::any())
-            ->twice()
-            ->andReturn(true);
-        App::instance(Redis::class, $predis);
+        App::bind(Redis::class, function () {
+            $predis = Mockery::mock(Redis::class);
+            $predis->shouldReceive('set')
+                ->with('XYZ', Mockery::any(), "PX", 300000, "NX")
+                ->twice()
+                ->andReturn(true);
+            $predis->shouldReceive('eval')
+                ->with(Mockery::any(), 1, 'XYZ', Mockery::any())
+                ->twice()
+                ->andReturn(true);
+            return $predis;
+        });
 
-        $redlock = new RedLock([['tester']]);
+        $redlock = new RedLock($this->servers);
         $results = $redlock->runLocked('XYZ', 300000, function ($refresh) {
             $refresh();
             return "ABC";
@@ -155,18 +178,20 @@ class RedLockTest extends TestCase
 
     public function testRunLockedRefreshFail()
     {
-        $predis = Mockery::mock(Redis::class);
-        $predis->shouldReceive('set')
-            ->with('XYZ', Mockery::any(), "PX", 300000, "NX")
-            ->times(4)
-            ->andReturn(true, false, false, false);
-        $predis->shouldReceive('eval')
-            ->with(Mockery::any(), 1, 'XYZ', Mockery::any())
-            ->times(4)
-            ->andReturn(true);
-        App::instance(Redis::class, $predis);
+        App::bind(Redis::class, function () {
+            $predis = Mockery::mock(Redis::class);
+            $predis->shouldReceive('set')
+                ->with('XYZ', Mockery::any(), "PX", 300000, "NX")
+                ->times(4)
+                ->andReturn(true, false, false, false);
+            $predis->shouldReceive('eval')
+                ->with(Mockery::any(), 1, 'XYZ', Mockery::any())
+                ->times(4)
+                ->andReturn(true);
+            return $predis;
+        });
 
-        $redlock = new RedLock([['tester']]);
+        $redlock = new RedLock($this->servers);
         $results = $redlock->runLocked('XYZ', 300000, function ($refresh) {
             $refresh();
             return "ABC";
