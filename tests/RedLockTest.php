@@ -23,9 +23,24 @@ class RedLockTest extends TestCase
         new RedLock([]);
     }
 
+    private function assertGoodRedisMake($args)
+    {
+        $this->assertTrue(is_array($args));
+        $app = app(); 
+        if (method_exists($app, 'makeWith')) {
+            // Laravel 5.4+
+            $this->assertEquals($this->servers[0], $args['parameters']);
+        } else {
+            // Laravel 5.0 - 5.3
+            $this->assertEquals($this->servers[0], $args[0]);
+        }
+    }
+
     public function testLock()
     {
-        App::bind(Redis::class, function() {
+        $caught_args = null;
+        App::bind(Redis::class, function($app, $args) use (&$caught_args) {
+            $caught_args = $args;
             $predis = Mockery::mock(Redis::class);
             $predis->shouldReceive('set')
                 ->with('XYZ', Mockery::any(), "PX", 300000, "NX")
@@ -37,6 +52,7 @@ class RedLockTest extends TestCase
         $redlock = new RedLock($this->servers);
         $lock = $redlock->lock('XYZ', 300000);
 
+        $this->assertGoodRedisMake($caught_args);
         $this->assertEquals('XYZ', $lock['resource']);
         $this->assertTrue(is_numeric($lock['validity']));
         $this->assertNotNull($lock['token']);
@@ -44,7 +60,9 @@ class RedLockTest extends TestCase
 
     public function testUnlock()
     {
-        App::bind(Redis::class, function () {
+        $caught_args = null;
+        App::bind(Redis::class, function($app, $args) use (&$caught_args) {
+            $caught_args = $args;
             $predis = Mockery::mock(Redis::class);
             $predis->shouldReceive('eval')
                 ->with(Mockery::any(), 1, 'XYZ', '1234')
@@ -59,11 +77,15 @@ class RedLockTest extends TestCase
             'validity' => 300000,
             'token' => 1234,
         ]);
+
+        $this->assertGoodRedisMake($caught_args);
     }
 
     public function testLockFail()
     {
-        App::bind(Redis::class, function () {
+        $caught_args = null;
+        App::bind(Redis::class, function($app, $args) use (&$caught_args) {
+            $caught_args = $args;
             $predis = Mockery::mock(Redis::class);
             $predis->shouldReceive('set')
                 ->with('XYZ', Mockery::any(), "PX", 300000, "NX")
@@ -79,12 +101,15 @@ class RedLockTest extends TestCase
         $redlock = new RedLock($this->servers);
         $lock = $redlock->lock('XYZ', 300000);
 
+        $this->assertGoodRedisMake($caught_args);
         $this->assertFalse($lock);
     }
 
     public function testUnlockFail()
     {
-        App::bind(Redis::class, function () {
+        $caught_args = null;
+        App::bind(Redis::class, function($app, $args) use (&$caught_args) {
+            $caught_args = $args;
             $predis = Mockery::mock(Redis::class);
             $predis->shouldReceive('eval')
                 ->with(Mockery::any(), 1, 'XYZ', '1234')
@@ -99,11 +124,15 @@ class RedLockTest extends TestCase
             'validity' => 300000,
             'token' => 1234,
         ]);
+        
+        $this->assertGoodRedisMake($caught_args);
     }
 
     public function testRefresh()
     {
-        App::bind(Redis::class, function () {
+        $caught_args = null;
+        App::bind(Redis::class, function($app, $args) use (&$caught_args) {
+            $caught_args = $args;
             $predis = Mockery::mock(Redis::class);
             $predis->shouldReceive('eval')
                 ->with(Mockery::any(), 1, 'XYZ', '1234')
@@ -124,6 +153,7 @@ class RedLockTest extends TestCase
             'ttl' => 300000,
         ]);
 
+        $this->assertGoodRedisMake($caught_args);
         $this->assertEquals('XYZ', $lock['resource']);
         $this->assertTrue(is_numeric($lock['validity']));
         $this->assertNotNull($lock['token']);
@@ -131,7 +161,9 @@ class RedLockTest extends TestCase
 
     public function testRunLocked()
     {
-        App::bind(Redis::class, function () {
+        $caught_args = null;
+        App::bind(Redis::class, function($app, $args) use (&$caught_args) {
+            $caught_args = $args;
             $predis = Mockery::mock(Redis::class);
             $predis->shouldReceive('set')
                 ->with('XYZ', Mockery::any(), "PX", 300000, "NX")
@@ -149,12 +181,15 @@ class RedLockTest extends TestCase
             return "ABC";
         });
 
+        $this->assertGoodRedisMake($caught_args);
         $this->assertEquals('ABC', $results);
     }
 
     public function testRunLockedRefresh()
     {
-        App::bind(Redis::class, function () {
+        $caught_args = null;
+        App::bind(Redis::class, function($app, $args) use (&$caught_args) {
+            $caught_args = $args;
             $predis = Mockery::mock(Redis::class);
             $predis->shouldReceive('set')
                 ->with('XYZ', Mockery::any(), "PX", 300000, "NX")
@@ -173,12 +208,15 @@ class RedLockTest extends TestCase
             return "ABC";
         });
 
+        $this->assertGoodRedisMake($caught_args);
         $this->assertEquals('ABC', $results);
     }
 
     public function testRunLockedRefreshFail()
     {
-        App::bind(Redis::class, function () {
+        $caught_args = null;
+        App::bind(Redis::class, function($app, $args) use (&$caught_args) {
+            $caught_args = $args;
             $predis = Mockery::mock(Redis::class);
             $predis->shouldReceive('set')
                 ->with('XYZ', Mockery::any(), "PX", 300000, "NX")
@@ -197,6 +235,7 @@ class RedLockTest extends TestCase
             return "ABC";
         });
 
+        $this->assertGoodRedisMake($caught_args);
         $this->assertFalse($results);
     }
 }
