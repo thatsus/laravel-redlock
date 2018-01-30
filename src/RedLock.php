@@ -72,11 +72,15 @@ class RedLock
 
     private function initInstances()
     {
+        $app = app();
         if (empty($this->instances)) {
             foreach ($this->servers as $server) {
-                //list($host, $port, $database) = $server;
-                $redis = App::make(Redis::class, [$server]);
-                //$redis->connect($host, $port, $timeout);
+                // support newer and older Laravel 5.*
+                if (method_exists($app, 'makeWith')) {
+                    $redis = $app->makeWith(Redis::class, ['parameters' => $server]);
+                } else {
+                    $redis = $app->make(Redis::class, [$server]);
+                }
                 $this->instances[] = $redis;
             }
         }

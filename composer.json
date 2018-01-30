@@ -24,7 +24,7 @@
     "predis/predis": "^1.1"
   },
   "require-dev": {
-    "laravel/framework": "5.1.*",
+    "orchestra/testbench": "~3.0",
     "php-mock/php-mock-mockery": "^1.1",
     "phpunit/phpunit": "~5.7"
   },
@@ -36,6 +36,27 @@
   "autoload-dev": {
     "classmap": [
       "tests/"
+    ]
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "ThatsUs\\RedLock\\RedLockServiceProvider"
+      ]
+    }
+  },
+  "scripts": {
+    "test": [
+      "rm vendor -rf; rm composer.lock; echo 1",
+      "composer require orchestra/testbench 3.4",
+      "phpunit | tee phpunit.4.log",
+      "rm vendor -rf; rm composer.lock; echo 1",
+      "composer require orchestra/testbench 3.3",
+      "phpunit | tee phpunit.3.log",
+      "rm vendor -rf; rm composer.lock; echo 1",
+      "composer require orchestra/testbench 3.2",
+      "phpunit | tee phpunit.2.log",
+      "cat phpunit.*.log"
     ]
   },
   "minimum-stability": "stable"
