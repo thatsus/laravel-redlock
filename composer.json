@@ -1,5 +1,5 @@
 {
-  "name": "thatsus/laravel-redlock",
+  "name": "zilveer/laravel-redlock",
   "description": "Redis distributed locks for laravel",
   "license": "MIT",
   "keywords": ["redlock", "laravel redis lock", "redis lock"],
