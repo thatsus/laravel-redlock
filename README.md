@@ -10,7 +10,7 @@ This library was originally built by LibiChai based on the Redlock algorithm dev
 
 ### Installation
 
-1. `composer require thatsus/laravel-redlock`
+1. `composer require zilveer/laravel-redlock`
 2. Add `ThatsUs\RedLock\RedLockServiceProvider::class,` to the `providers` array in config/app.php
 3. Enjoy!
 
