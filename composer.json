@@ -63,6 +63,5 @@
       "phpunit | tee phpunit.2.log",
       "cat phpunit.*.log"
     ]
-  },
-  "minimum-stability": "stable"
+  }
 }
