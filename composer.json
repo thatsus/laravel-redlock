@@ -1,5 +1,5 @@
 {
-  "name": "thatsus/laravel-redlock",
+  "name": "zilveer/laravel-redlock",
   "description": "Redis distributed locks for laravel",
   "license": "MIT",
   "keywords": ["redlock", "laravel redis lock", "redis lock"],
@@ -18,10 +18,10 @@
     }
   ],
   "require": {
-    "php": ">=5.4.0",
-    "illuminate/support": "^5.0",
-    "illuminate/console": "^5.0",
-    "predis/predis": "^1.1"
+    "php": "^7.1.3",
+    "illuminate/support": "^5.8",
+    "illuminate/console": "^5.8",
+    "predis/predis": "^2.0@dev"
   },
   "require-dev": {
     "orchestra/testbench": "~3.0",
@@ -38,7 +38,12 @@
       "tests/"
     ]
   },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "extra": {
+    "branch-alias": {
+      "dev-master": "3.2-dev"
+    },
     "laravel": {
       "providers": [
         "ThatsUs\\RedLock\\RedLockServiceProvider"
@@ -58,6 +63,5 @@
       "phpunit | tee phpunit.2.log",
       "cat phpunit.*.log"
     ]
-  },
-  "minimum-stability": "stable"
+  }
 }
